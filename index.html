@@ -1,267 +1,492 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r"""<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Résultats Municipales 2026</title>
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Municipales 2026 — Résultats nationaux</title>
 <style>
-
-body{
-font-family: Arial;
-background:#f2f3f7;
-margin:0;
-padding:30px;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-}
-
-.search{
-background:white;
-border:2px solid #000;
-padding:15px;
-border-radius:10px;
-margin-bottom:20px;
-}
-
-.tab{
-background:white;
-display:inline-block;
-padding:12px 20px;
-border-radius:30px;
-border:2px solid #2d5bff;
-color:#2d5bff;
-font-weight:bold;
-margin-bottom:20px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 0 3px rgba(0,0,0,0.1);
-}
-
-.stat{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:10px;
-margin-bottom:20px;
-}
-
-.stat div{
-background:#f4f6fa;
-padding:15px;
-border-radius:10px;
-text-align:center;
-}
-
-.party{
-display:flex;
-align-items:center;
-margin-bottom:18px;
-}
-
-.logo{
-width:50px;
-height:80px;
-color:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:bold;
-margin-right:15px;
-}
-
-.bar{
-height:8px;
-background:#ddd;
-border-radius:5px;
-margin-top:5px;
-}
-
-.fill{
-height:100%;
-background:#1e55b3;
-border-radius:5px;
-}
-
-.map{
-display:flex;
-justify-content:center;
-margin-top:20px;
-}
-
-.note{
-margin-top:15px;
-font-size:13px;
-color:#555;
-text-align:center;
-}
-
+  :root{
+    --bg:#eef1f5;
+    --card:#ffffff;
+    --line:#d8dee8;
+    --text:#122033;
+    --muted:#6b7788;
+    --blue:#2458c6;
+    --blue-soft:#5c7fd0;
+    --navy:#0e1b47;
+    --red:#b61f4c;
+    --purple:#6d48c7;
+    --gold:#d8a117;
+    --gray:#8a8f99;
+    --barbg:#dfe4ea;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Arial, Helvetica, sans-serif;
+  }
+  .page{
+    max-width:1360px;
+    margin:0 auto;
+    padding:26px 24px 40px;
+  }
+  .search{
+    background:#fff;
+    border:2px solid #192434;
+    border-radius:16px;
+    min-height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    font-size:18px;
+    box-shadow:0 1px 0 rgba(0,0,0,.03);
+  }
+  .search .placeholder{color:#95a1b0}
+  .header-row{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin:22px 0 20px;
+    flex-wrap:wrap;
+  }
+  .tab{
+    border:3px solid #2d61ff;
+    color:#2d61ff;
+    background:#fff;
+    border-radius:999px;
+    padding:14px 24px;
+    font-weight:800;
+    font-size:18px;
+  }
+  .subinfo{
+    color:#64748b;
+    font-size:14px;
+    background:#f7f9fc;
+    border:1px solid var(--line);
+    padding:10px 14px;
+    border-radius:12px;
+  }
+  .layout{
+    display:grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap:22px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:20px;
+    box-shadow:0 4px 16px rgba(16,24,40,.04);
+  }
+  .left-card{
+    padding:18px 18px 16px;
+  }
+  .right-card{
+    padding:18px 18px 16px;
+  }
+  .stamp-row{
+    display:flex;
+    justify-content:flex-end;
+    align-items:flex-start;
+    margin-bottom:10px;
+  }
+  .stamp{
+    text-align:right;
+    font-size:12px;
+    color:#6b7280;
+  }
+  .badge{
+    display:inline-block;
+    padding:8px 10px;
+    border-radius:10px;
+    background:#f2f5f9;
+    border:1px solid var(--line);
+    font-weight:800;
+    margin-bottom:4px;
+  }
+  .stats{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .stat{
+    background:#f7f9fc;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:14px 12px;
+    min-height:96px;
+  }
+  .stat .k{
+    color:#6b7280;
+    font-size:13px;
+    margin-bottom:8px;
+  }
+  .stat .v{
+    font-weight:800;
+    font-size:18px;
+    line-height:1.2;
+    word-break:break-word;
+  }
+  .section-title{
+    font-size:15px;
+    color:#556274;
+    font-weight:800;
+    letter-spacing:.2px;
+    margin:4px 0 14px;
+    text-transform:uppercase;
+  }
+  .party{
+    display:grid;
+    grid-template-columns: 62px 1fr;
+    gap:14px;
+    align-items:center;
+    margin:14px 0;
+  }
+  .sig{
+    width:58px;height:92px;border-radius:3px;color:#fff;font-size:16px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+  }
+  .party-name{
+    font-size:17px;
+    font-weight:800;
+    margin-bottom:6px;
+  }
+  .meta-line{
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    color:#334155;
+    font-size:14px;
+    margin-bottom:7px;
+  }
+  .bar{
+    width:100%;
+    height:10px;
+    border-radius:999px;
+    background:var(--barbg);
+    overflow:hidden;
+  }
+  .fill{
+    height:100%;
+    border-radius:999px;
+  }
+  .map-title{
+    text-align:center;
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:.2px;
+    margin-top:6px;
+    margin-bottom:6px;
+  }
+  .map-sub{
+    text-align:center;
+    color:#5f6b7b;
+    font-size:13px;
+    margin-bottom:14px;
+  }
+  .map-wrap{
+    background:#f8fafc;
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:16px;
+  }
+  .svg-wrap{
+    display:flex;
+    justify-content:center;
+  }
+  svg{max-width:100%;height:auto}
+  .region{
+    stroke:#fff;
+    stroke-width:3;
+    cursor:pointer;
+    transition:transform .15s ease, opacity .15s ease, filter .15s ease;
+  }
+  .region:hover{
+    filter:brightness(1.03);
+    transform:translateY(-1px);
+  }
+  .region.dim{opacity:.25}
+  .legend{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+    margin-top:16px;
+  }
+  .legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:#fff;
+    padding:10px 11px;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .legend-item.dim{opacity:.35}
+  .swatch{
+    width:13px;height:13px;border-radius:4px;flex:0 0 auto;
+  }
+  .note{
+    margin-top:14px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 14px;
+    font-size:14px;
+    color:#4b5563;
+    text-align:center;
+  }
+  .foot{
+    margin-top:18px;
+    color:#4b5563;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    line-height:1.5;
+    font-size:14px;
+  }
+  .tooltip{
+    position:fixed;
+    display:none;
+    background:#101828;
+    color:#fff;
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:13px;
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
+    pointer-events:none;
+    z-index:50;
+    max-width:240px;
+  }
+  @media (max-width: 1080px){
+    .layout{grid-template-columns:1fr}
+    .stats{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width: 640px){
+    .page{padding:16px}
+    .stats{grid-template-columns:1fr}
+    .legend{grid-template-columns:1fr}
+    .party{grid-template-columns:54px 1fr}
+    .sig{width:52px;height:84px}
+  }
 </style>
 </head>
-
 <body>
+  <div class="page">
+    <div class="search">
+      <div class="placeholder">Accédez aux résultats au niveau national, par grande région…</div>
+      <div>🔎</div>
+    </div>
 
-<div class="container">
+    <div class="header-row">
+      <div class="tab">PREMIER TOUR 2026</div>
+      <div class="subinfo">Participation à 12h : <strong>0,0 %</strong> — en attente des premières remontées</div>
+    </div>
 
-<div class="search">
-Accédez aux résultats dans votre département, votre commune…
-</div>
+    <div class="layout">
+      <section class="card left-card">
+        <div class="stamp-row">
+          <div class="stamp">
+            <div class="badge">⏳ EN ATTENTE</div><br>
+            Date du tour le 15/03/2026
+          </div>
+        </div>
 
-<div class="tab">
-PREMIER TOUR 2026
-</div>
+        <div class="stats">
+          <div class="stat">
+            <div class="k">Inscrits</div>
+            <div class="v">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Votants</div>
+            <div class="v">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Participation</div>
+            <div class="v">0,0 %</div>
+          </div>
+          <div class="stat">
+            <div class="k">Participation à 12h</div>
+            <div class="v">0,0 %</div>
+          </div>
+          <div class="stat">
+            <div class="k">Exprimés</div>
+            <div class="v">0</div>
+          </div>
+        </div>
 
-<div class="grid">
+        <div class="section-title">Résultats nationaux provisoires</div>
 
-<div class="card">
+        <div id="party-list"></div>
+      </section>
 
-<div class="stat">
-<div>
-Inscrits<br>
-<b>48 720 000</b>
-</div>
+      <section class="card right-card">
+        <div class="map-title">FRANCE — GRANDES RÉGIONS</div>
+        <div class="map-sub">Abstention nationale estimée : <strong>0,0 %</strong></div>
 
-<div>
-Votants<br>
-<b>30 730 000</b>
-</div>
+        <div class="map-wrap">
+          <div class="svg-wrap">
+            <svg viewBox="0 0 560 560" aria-label="Carte stylisée de la France par grandes régions">
+              <!-- Bretagne -->
+              <path class="region" id="bretagne" data-name="Bretagne" data-party="Gauche (PS, LFI, PCF, écologistes…)" data-votes="0" data-pct="0,0 %"
+                d="M78 170 L126 150 L166 166 L165 211 L121 229 L88 217 Z" fill="#b61f4c"/>
+              <!-- Normandie -->
+              <path class="region" id="normandie" data-name="Normandie" data-party="Divers droite" data-votes="0" data-pct="0,0 %"
+                d="M168 128 L228 120 L268 141 L258 183 L204 197 L165 176 Z" fill="#2458c6"/>
+              <!-- Hauts-de-France -->
+              <path class="region" id="hdf" data-name="Hauts-de-France" data-party="Rassemblement National" data-votes="0" data-pct="0,0 %"
+                d="M262 92 L326 90 L374 120 L361 172 L304 179 L258 143 Z" fill="#6d48c7"/>
+              <!-- Grand Est -->
+              <path class="region" id="grandest" data-name="Grand Est" data-party="Rassemblement National" data-votes="0" data-pct="0,0 %"
+                d="M373 122 L448 136 L484 200 L451 276 L385 260 L360 172 Z" fill="#6d48c7"/>
+              <!-- Pays de la Loire -->
+              <path class="region" id="pdl" data-name="Pays de la Loire" data-party="Divers droite" data-votes="0" data-pct="0,0 %"
+                d="M128 230 L186 211 L231 232 L218 281 L164 293 L122 265 Z" fill="#2458c6"/>
+              <!-- Île-de-France -->
+              <path class="region" id="idf" data-name="Île-de-France" data-party="Majorité présidentielle" data-votes="0" data-pct="0,0 %"
+                d="M266 186 L308 181 L326 214 L305 244 L270 241 L250 212 Z" fill="#d8a117"/>
+              <!-- Centre-Val de Loire -->
+              <path class="region" id="cvl" data-name="Centre-Val de Loire" data-party="Divers centre et dissidents Ensemble" data-votes="0" data-pct="0,0 %"
+                d="M219 233 L269 241 L310 245 L294 301 L228 310 L195 271 Z" fill="#5c7fd0"/>
+              <!-- Bourgogne-Franche-Comté -->
+              <path class="region" id="bfc" data-name="Bourgogne-Franche-Comté" data-party="Rassemblement National" data-votes="0" data-pct="0,0 %"
+                d="M327 212 L387 213 L404 275 L370 317 L294 302 L310 245 Z" fill="#6d48c7"/>
+              <!-- Nouvelle-Aquitaine -->
+              <path class="region" id="naq" data-name="Nouvelle-Aquitaine" data-party="Gauche (PS, LFI, PCF, écologistes…)" data-votes="0" data-pct="0,0 %"
+                d="M128 296 L227 311 L239 375 L202 460 L122 470 L80 387 Z" fill="#b61f4c"/>
+              <!-- Auvergne-Rhône-Alpes -->
+              <path class="region" id="ara" data-name="Auvergne-Rhône-Alpes" data-party="Divers droite" data-votes="0" data-pct="0,0 %"
+                d="M371 318 L430 309 L468 377 L442 451 L368 454 L325 392 Z" fill="#2458c6"/>
+              <!-- Occitanie -->
+              <path class="region" id="occitanie" data-name="Occitanie" data-party="Rassemblement National" data-votes="0" data-pct="0,0 %"
+                d="M239 376 L325 392 L369 454 L319 499 L237 497 L193 454 Z" fill="#6d48c7"/>
+              <!-- PACA -->
+              <path class="region" id="paca" data-name="Provence-Alpes-Côte d’Azur" data-party="Rassemblement National" data-votes="0" data-pct="0,0 %"
+                d="M441 452 L500 447 L523 478 L495 513 L417 511 L369 454 Z" fill="#6d48c7"/>
+              <!-- Corse -->
+              <path class="region" id="corse" data-name="Corse" data-party="Majorité présidentielle" data-votes="0" data-pct="0,0 %"
+                d="M507 486 L520 476 L529 492 L526 515 L512 530 L503 519 L507 503 Z" fill="#d8a117"/>
 
-<div>
-Participation<br>
-<b>63,1 %</b>
-</div>
+              <!-- Labels -->
+              <g font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">
+                <text x="123" y="191">BRETAGNE</text>
+                <text x="214" y="157">NORMANDIE</text>
+                <text x="315" y="138">HAUTS-DE-</text>
+                <text x="315" y="152">FRANCE</text>
+                <text x="425" y="204">GRAND EST</text>
+                <text x="174" y="257">PAYS DE</text>
+                <text x="174" y="271">LA LOIRE</text>
+                <text x="287" y="220">ÎLE-DE-</text>
+                <text x="287" y="234">FRANCE</text>
+                <text x="252" y="279">CENTRE-VAL</text>
+                <text x="252" y="293">DE LOIRE</text>
+                <text x="348" y="263">BOURGOGNE-</text>
+                <text x="348" y="277">FRANCHE-COMTÉ</text>
+                <text x="160" y="389">NOUVELLE-</text>
+                <text x="160" y="403">AQUITAINE</text>
+                <text x="409" y="384">AUVERGNE-</text>
+                <text x="409" y="398">RHÔNE-ALPES</text>
+                <text x="280" y="445">OCCITANIE</text>
+                <text x="447" y="484">PACA</text>
+              </g>
+            </svg>
+          </div>
 
-<div>
-Exprimés<br>
-<b>29 850 000</b>
-</div>
-</div>
+          <div class="legend" id="legend"></div>
 
+          <div class="note">
+            Ce système affiche uniquement une estimation <strong>nationale</strong> et une lecture <strong>par grandes régions</strong>.<br>
+            Il ne permet pas de consulter directement les résultats commune par commune.
+          </div>
+        </div>
+      </section>
+    </div>
 
-<div class="party">
-<div class="logo" style="background:#1e55b3">DVD</div>
-<div style="flex:1">
-Divers droite<br>
-8210000 voix
-<div class="bar">
-<div class="fill" style="width:27%"></div>
-</div>
-27,5 %
-</div>
-</div>
+    <div class="foot">
+      Présentation fictive inspirée d’une soirée électorale. Tous les chiffres sont actuellement remis à <strong>zéro</strong> dans l’attente des premières remontées, y compris le taux de participation à 12h.
+    </div>
+  </div>
 
+  <div class="tooltip" id="tooltip"></div>
 
-<div class="party">
-<div class="logo" style="background:#b11e3b">GAU</div>
-<div style="flex:1">
-Gauche (PS, LFI, PCF, écologistes)
-7210000 voix
-<div class="bar">
-<div class="fill" style="width:24%"></div>
-</div>
-24,1 %
-</div>
-</div>
+<script>
+const parties = [
+  {sig:"DVD", name:"Divers droite", votes:"0 voix", pct:"0,0 %", bar:0, color:"#2458c6"},
+  {sig:"GAU", name:"Gauche (PS, LFI, PCF, écologistes…)", votes:"0 voix", pct:"0,0 %", bar:0, color:"#b61f4c"},
+  {sig:"RN", name:"Rassemblement National", votes:"0 voix", pct:"0,0 %", bar:0, color:"#6d48c7"},
+  {sig:"ENS", name:"Majorité présidentielle", votes:"0 voix", pct:"0,0 %", bar:0, color:"#d8a117"},
+  {sig:"DVC", name:"Divers centre et dissidents Ensemble", votes:"0 voix", pct:"0,0 %", bar:0, color:"#5c7fd0"},
+  {sig:"DIV", name:"Autres (divers, écologistes, régionalistes…)", votes:"0 voix", pct:"0,0 %", bar:0, color:"#8a8f99"},
+];
 
+const partyList = document.getElementById('party-list');
+const legend = document.getElementById('legend');
+const tooltip = document.getElementById('tooltip');
+const regions = [...document.querySelectorAll('.region')];
+let activeParty = null;
 
-<div class="party">
-<div class="logo" style="background:#6c48c5">RN</div>
-<div style="flex:1">
-Rassemblement National
-6780000 voix
-<div class="bar">
-<div class="fill" style="width:22%"></div>
-</div>
-22,7 %
-</div>
-</div>
+parties.forEach(p => {
+  const row = document.createElement('div');
+  row.className = 'party';
+  row.innerHTML = `
+    <div class="sig" style="background:${p.color}">${p.sig}</div>
+    <div>
+      <div class="party-name">${p.name}</div>
+      <div class="meta-line"><span>${p.votes}</span><span>${p.pct}</span></div>
+      <div class="bar"><div class="fill" style="width:${p.bar}%; background:${p.color}"></div></div>
+    </div>
+  `;
+  partyList.appendChild(row);
 
+  const lg = document.createElement('div');
+  lg.className = 'legend-item';
+  lg.dataset.party = p.name;
+  lg.innerHTML = `<span class="swatch" style="background:${p.color}"></span><span>${p.name}</span>`;
+  lg.onclick = () => {
+    activeParty = activeParty === p.name ? null : p.name;
+    refreshFilter();
+  };
+  legend.appendChild(lg);
+});
 
-<div class="party">
-<div class="logo" style="background:#d6a21f">ENS</div>
-<div style="flex:1">
-Majorité présidentielle
-3980000 voix
-<div class="bar">
-<div class="fill" style="width:13%"></div>
-</div>
-13,3 %
-</div>
-</div>
+function refreshFilter(){
+  regions.forEach(r => {
+    const dim = activeParty && r.dataset.party !== activeParty;
+    r.classList.toggle('dim', dim);
+  });
+  [...legend.children].forEach(el => {
+    el.classList.toggle('dim', activeParty && el.dataset.party !== activeParty);
+  });
+}
 
-
-<div class="party">
-<div class="logo" style="background:#5777c7">DVC</div>
-<div style="flex:1">
-Divers centre
-1850000 voix
-<div class="bar">
-<div class="fill" style="width:6%"></div>
-</div>
-6,2 %
-</div>
-</div>
-
-
-<div class="party">
-<div class="logo" style="background:#888">DIV</div>
-<div style="flex:1">
-Autres listes
-1820000 voix
-<div class="bar">
-<div class="fill" style="width:6%"></div>
-</div>
-6,1 %
-</div>
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h3 style="text-align:center">
-ABSTENTION : 36,9 %
-</h3>
-
-<div class="map">
-
-<svg width="300" viewBox="0 0 300 300">
-
-<polygon points="60,80 100,60 130,80 120,120 80,120" fill="#b11e3b"/>
-<polygon points="130,60 170,60 190,90 170,120 130,110" fill="#6c48c5"/>
-<polygon points="100,120 140,110 160,140 130,170 90,150" fill="#5777c7"/>
-<polygon points="160,140 200,130 220,170 190,210 140,180" fill="#1e55b3"/>
-<polygon points="70,160 110,170 120,220 80,240 50,200" fill="#b11e3b"/>
-<polygon points="140,180 190,210 170,250 120,250 100,220" fill="#6c48c5"/>
-<polygon points="200,90 240,100 260,140 230,180 200,160" fill="#6c48c5"/>
-<polygon points="120,90 150,80 160,110 130,120" fill="#d6a21f"/>
-
-</svg>
-
-</div>
-
-<div class="note">
-Ce système affiche uniquement une estimation nationale des résultats.<br>
-Il ne permet pas de consulter les résultats commune par commune.
-</div>
-
-</div>
-
-</div>
-
-</div>
-
+regions.forEach(region => {
+  region.addEventListener('mousemove', e => {
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX + 14) + 'px';
+    tooltip.style.top = (e.clientY + 14) + 'px';
+    tooltip.innerHTML = `<strong>${region.dataset.name}</strong><br>${region.dataset.party}<br>${region.dataset.votes} — ${region.dataset.pct}`;
+  });
+  region.addEventListener('mouseleave', () => {
+    tooltip.style.display = 'none';
+  });
+  region.addEventListener('click', () => {
+    activeParty = activeParty === region.dataset.party ? null : region.dataset.party;
+    refreshFilter();
+  });
+});
+</script>
 </body>
 </html>
+"""
+
+path = Path("/mnt/data/index_municipales2026_ameliore.html")
+path.write_text(html, encoding="utf-8")
+print(f"Saved to {path}")
+
