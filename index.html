@@ -242,6 +242,15 @@
       gap: 10px;
     }
 
+    .results-subtitle {
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 14px 0 4px;
+      color: #32405e;
+    }
+
     .result-item-detailed {
       display: grid;
       grid-template-columns: 42px 1fr;
@@ -659,7 +668,7 @@
         sieges: "384 375 sièges",
         pct: "55,18 %",
         pctValue: 55.18,
-        communautaires: "14 173 sièges communautaires"
+        communautaires: "384 375 sièges communautaires"
       },
       {
         code: "DVD",
@@ -669,7 +678,7 @@
         sieges: "15 412 sièges",
         pct: "13,25 %",
         pctValue: 13.25,
-        communautaires: "3 398 sièges communautaires"
+        communautaires: "15 412 sièges communautaires"
       },
       {
         code: "DVG",
@@ -679,7 +688,7 @@
         sieges: "9 778 sièges",
         pct: "8,98 %",
         pctValue: 8.98,
-        communautaires: "1 933 sièges communautaires"
+        communautaires: "9 778 sièges communautaires"
       },
       {
         code: "DVC",
@@ -689,7 +698,7 @@
         sieges: "8 007 sièges",
         pct: "6,98 %",
         pctValue: 6.98,
-        communautaires: "1 390 sièges communautaires"
+        communautaires: "8 007 sièges communautaires"
       },
       {
         code: "DIV",
@@ -699,7 +708,11 @@
         sieges: "8 637 sièges",
         pct: "6,14 %",
         pctValue: 6.14,
-        communautaires: "1 694 sièges communautaires"
+        communautaires: "8 637 sièges communautaires"
+      },
+      {
+        type: "subtitle",
+        label: "Partis nationaux"
       },
       {
         code: "RN",
@@ -709,7 +722,7 @@
         sieges: "599 sièges",
         pct: "2,13 %",
         pctValue: 2.13,
-        communautaires: "0 siège communautaire"
+        communautaires: "599 sièges communautaires"
       },
       {
         code: "LR",
@@ -719,7 +732,7 @@
         sieges: "817 sièges",
         pct: "1,09 %",
         pctValue: 1.09,
-        communautaires: "0 siège communautaire"
+        communautaires: "817 sièges communautaires"
       },
       {
         code: "PS",
@@ -729,17 +742,7 @@
         sieges: "697 sièges",
         pct: "0,54 %",
         pctValue: 0.54,
-        communautaires: "0 siège communautaire"
-      },
-      {
-        code: "PCF",
-        key: "gauche",
-        name: "PCF",
-        voix: "49 371 voix",
-        sieges: "363 sièges",
-        pct: "0,32 %",
-        pctValue: 0.32,
-        communautaires: "0 siège communautaire"
+        communautaires: "697 sièges communautaires"
       },
       {
         code: "LFI",
@@ -749,7 +752,17 @@
         sieges: "40 sièges",
         pct: "0,36 %",
         pctValue: 0.36,
-        communautaires: "0 siège communautaire"
+        communautaires: "40 sièges communautaires"
+      },
+      {
+        code: "PCF",
+        key: "gauche",
+        name: "PCF",
+        voix: "49 371 voix",
+        sieges: "363 sièges",
+        pct: "0,32 %",
+        pctValue: 0.32,
+        communautaires: "363 sièges communautaires"
       },
       {
         code: "ECO",
@@ -759,7 +772,7 @@
         sieges: "109 sièges",
         pct: "0,18 %",
         pctValue: 0.18,
-        communautaires: "0 siège communautaire"
+        communautaires: "109 sièges communautaires"
       }
     ];
 
@@ -878,6 +891,14 @@
       resultsList.innerHTML = "";
 
       parties.forEach((party) => {
+        if (party.type === "subtitle") {
+          const subtitle = document.createElement("div");
+          subtitle.className = "results-subtitle";
+          subtitle.textContent = party.label;
+          resultsList.appendChild(subtitle);
+          return;
+        }
+
         const item = document.createElement("div");
         item.className = "result-item-detailed";
         item.innerHTML = `
