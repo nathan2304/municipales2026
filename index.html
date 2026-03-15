@@ -242,13 +242,6 @@
       gap: 10px;
     }
 
-    .results-subtitle {
-      font-size: 14px;
-      font-weight: 900;
-      color: var(--text);
-      margin: 8px 0 2px;
-    }
-
     .result-item-detailed {
       display: grid;
       grid-template-columns: 42px 1fr;
@@ -709,10 +702,6 @@
         communautaires: "1 694 sièges communautaires"
       },
       {
-        type: "subtitle",
-        label: "Partis nationaux :"
-      },
-      {
         code: "RN",
         key: "rn",
         name: "RN et alliés",
@@ -889,14 +878,6 @@
       resultsList.innerHTML = "";
 
       parties.forEach((party) => {
-        if (party.type === "subtitle") {
-          const subtitle = document.createElement("div");
-          subtitle.className = "results-subtitle";
-          subtitle.textContent = party.label;
-          resultsList.appendChild(subtitle);
-          return;
-        }
-
         const item = document.createElement("div");
         item.className = "result-item-detailed";
         item.innerHTML = `
