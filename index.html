@@ -19,6 +19,7 @@
       --ens: #d8a10d;
       --dvc: #5e84d8;
       --div: #7a7884;
+      --ecolo: #2f9e44;
     }
 
     * {
@@ -241,6 +242,13 @@
       gap: 10px;
     }
 
+    .results-subtitle {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+      margin: 8px 0 2px;
+    }
+
     .result-item-detailed {
       display: grid;
       grid-template-columns: 42px 1fr;
@@ -269,6 +277,7 @@
     .swatch.ens { background: var(--ens); }
     .swatch.dvc { background: var(--dvc); }
     .swatch.div { background: var(--div); }
+    .swatch.ecolo { background: var(--ecolo); }
 
     .result-content {
       display: flex;
@@ -331,6 +340,7 @@
     .swatch.ens + .result-content .bar.detailed > span { background: var(--ens); }
     .swatch.dvc + .result-content .bar.detailed > span { background: var(--dvc); }
     .swatch.div + .result-content .bar.detailed > span { background: var(--div); }
+    .swatch.ecolo + .result-content .bar.detailed > span { background: var(--ecolo); }
 
     .party-sub.community {
       font-size: 12px;
@@ -679,9 +689,19 @@
         communautaires: "1 933 sièges communautaires"
       },
       {
+        code: "DVC",
+        key: "dvc",
+        name: "Divers centre",
+        voix: "1 089 550 voix",
+        sieges: "8 007 sièges",
+        pct: "6,98 %",
+        pctValue: 6.98,
+        communautaires: "1 390 sièges communautaires"
+      },
+      {
         code: "DIV",
         key: "div",
-        name: "Autres (divers, divers écologistes, régionalistes…)",
+        name: "Autres divers",
         voix: "958 909 voix",
         sieges: "8 637 sièges",
         pct: "6,14 %",
@@ -689,14 +709,68 @@
         communautaires: "1 694 sièges communautaires"
       },
       {
-        code: "DVC",
-        key: "dvc",
-        name: "Divers centre et dissidents Ensemble",
-        voix: "1 089 550 voix",
-        sieges: "8 007 sièges",
-        pct: "6,98 %",
-        pctValue: 6.98,
-        communautaires: "1 390 sièges communautaires"
+        type: "subtitle",
+        label: "Partis nationaux :"
+      },
+      {
+        code: "RN",
+        key: "rn",
+        name: "RN et alliés",
+        voix: "332 824 voix",
+        sieges: "599 sièges",
+        pct: "2,13 %",
+        pctValue: 2.13,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "LR",
+        key: "dvd",
+        name: "LR",
+        voix: "169 842 voix",
+        sieges: "817 sièges",
+        pct: "1,09 %",
+        pctValue: 1.09,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "PS",
+        key: "gauche",
+        name: "PS",
+        voix: "83 951 voix",
+        sieges: "697 sièges",
+        pct: "0,54 %",
+        pctValue: 0.54,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "PCF",
+        key: "gauche",
+        name: "PCF",
+        voix: "49 371 voix",
+        sieges: "363 sièges",
+        pct: "0,32 %",
+        pctValue: 0.32,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "LFI",
+        key: "gauche",
+        name: "LFI",
+        voix: "55 415 voix",
+        sieges: "40 sièges",
+        pct: "0,36 %",
+        pctValue: 0.36,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "ECO",
+        key: "ecolo",
+        name: "Écologistes",
+        voix: "27 997 voix",
+        sieges: "109 sièges",
+        pct: "0,18 %",
+        pctValue: 0.18,
+        communautaires: "0 siège communautaire"
       }
     ];
 
@@ -815,6 +889,14 @@
       resultsList.innerHTML = "";
 
       parties.forEach((party) => {
+        if (party.type === "subtitle") {
+          const subtitle = document.createElement("div");
+          subtitle.className = "results-subtitle";
+          subtitle.textContent = party.label;
+          resultsList.appendChild(subtitle);
+          return;
+        }
+
         const item = document.createElement("div");
         item.className = "result-item-detailed";
         item.innerHTML = `
