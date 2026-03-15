@@ -14,11 +14,11 @@
       --blue: #2357ff;
       --shadow: 0 14px 40px rgba(22, 34, 61, 0.08);
       --dvd: #2450d3;
-      --gauche: #c7255d;
+      --gauche: #a9274c;
       --rn: #7447cf;
       --ens: #d8a10d;
       --dvc: #5e84d8;
-      --div: #8e97a8;
+      --div: #7a7884;
     }
 
     * {
@@ -82,7 +82,7 @@
       color: var(--text);
       font-size: 18px;
       line-height: 1;
-      cursor: pointer;
+      cursor: default;
     }
 
     .tabs {
@@ -204,6 +204,28 @@
       margin-top: 8px;
     }
 
+    .back-button {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: #f7f9fe;
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+
+    .back-button.visible {
+      display: inline-flex;
+    }
+
+    .back-button:hover {
+      background: #eef3ff;
+    }
+
     .section-title {
       font-size: 14px;
       font-weight: 900;
@@ -219,18 +241,18 @@
       gap: 10px;
     }
 
-    .result-item {
+    .result-item-detailed {
       display: grid;
-      grid-template-columns: 42px 1fr auto;
+      grid-template-columns: 42px 1fr;
       gap: 12px;
-      align-items: center;
-      padding: 8px 0;
+      align-items: start;
+      padding: 10px 0 14px;
     }
 
     .swatch {
       width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      height: 78px;
+      border-radius: 4px;
       color: #fff;
       font-size: 11px;
       font-weight: 900;
@@ -238,6 +260,7 @@
       place-items: center;
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      align-self: stretch;
     }
 
     .swatch.dvd { background: var(--dvd); }
@@ -247,54 +270,72 @@
     .swatch.dvc { background: var(--dvc); }
     .swatch.div { background: var(--div); }
 
-    .party-block {
+    .result-content {
       display: flex;
       flex-direction: column;
       gap: 6px;
+      min-width: 0;
     }
 
-    .party-name {
-      font-weight: 800;
-      font-size: 14px;
+    .party-name.large {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--text);
       line-height: 1.25;
     }
 
-    .party-sub {
+    .result-meta-line {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .meta-left,
+    .meta-right {
       font-size: 12px;
       color: var(--muted);
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
-    .bar-wrap {
-      grid-column: 2 / 4;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      align-items: center;
-      margin-top: -2px;
+    .meta-right {
+      font-weight: 800;
     }
 
-    .bar {
-      height: 6px;
+    .pct.big {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+      min-width: 58px;
+      text-align: right;
+    }
+
+    .bar.detailed {
+      height: 7px;
       border-radius: 999px;
-      background: #e8eef8;
+      background: #dfe5ed;
       overflow: hidden;
       position: relative;
     }
 
-    .bar > span {
+    .bar.detailed > span {
       display: block;
       height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, rgba(35,87,255,0.2), rgba(35,87,255,0.65));
       border-radius: inherit;
     }
 
-    .pct {
+    .swatch.dvd + .result-content .bar.detailed > span { background: var(--dvd); }
+    .swatch.gauche + .result-content .bar.detailed > span { background: var(--gauche); }
+    .swatch.rn + .result-content .bar.detailed > span { background: var(--rn); }
+    .swatch.ens + .result-content .bar.detailed > span { background: var(--ens); }
+    .swatch.dvc + .result-content .bar.detailed > span { background: var(--dvc); }
+    .swatch.div + .result-content .bar.detailed > span { background: var(--div); }
+
+    .party-sub.community {
       font-size: 12px;
-      font-weight: 800;
       color: var(--muted);
-      min-width: 40px;
-      text-align: right;
+      margin-top: -1px;
     }
 
     .map-card-title {
@@ -401,28 +442,6 @@
       font-size: 12px;
     }
 
-    .back-button {
-      display: none;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid var(--border);
-      background: #f7f9fe;
-      color: var(--text);
-      padding: 10px 14px;
-      border-radius: 12px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-bottom: 10px;
-    }
-
-    .back-button.visible {
-      display: inline-flex;
-    }
-
-    .back-button:hover {
-      background: #eef3ff;
-    }
-
     @media (max-width: 1100px) {
       .grid {
         grid-template-columns: 1fr;
@@ -439,6 +458,17 @@
       }
     }
 
+    @media (max-width: 700px) {
+      .result-meta-line {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .pct.big {
+        text-align: left;
+      }
+    }
+
     @media (max-width: 560px) {
       .page {
         padding: 14px;
@@ -446,14 +476,6 @@
 
       .stats {
         grid-template-columns: 1fr;
-      }
-
-      .result-item {
-        grid-template-columns: 36px 1fr;
-      }
-
-      .bar-wrap {
-        grid-column: 1 / -1;
       }
 
       .status-block {
@@ -519,7 +541,7 @@
 
         <button id="backButton" class="back-button" type="button">← Retour aux résultats nationaux</button>
 
-        <div class="section-title" id="resultsTitle">Résultats nationaux provisoires</div>
+        <div class="section-title" id="resultsTitle">SIÈGES MUNICIPAUX À POURVOIR : 513 425</div>
 
         <div class="results-list" id="resultsList"></div>
       </section>
@@ -603,12 +625,12 @@
           </svg>
 
           <div class="legend">
+            <div class="legend-item"><span class="dot" style="background: var(--div)"></span> Sans étiquette / autres</div>
             <div class="legend-item"><span class="dot" style="background: var(--dvd)"></span> Divers droite</div>
-            <div class="legend-item"><span class="dot" style="background: var(--gauche)"></span> Gauche (PS, LFI, PCF, écologistes…)</div>
+            <div class="legend-item"><span class="dot" style="background: var(--gauche)"></span> Divers gauche</div>
+            <div class="legend-item"><span class="dot" style="background: var(--dvc)"></span> Divers centre et dissidents Ensemble</div>
             <div class="legend-item"><span class="dot" style="background: var(--rn)"></span> Rassemblement National</div>
             <div class="legend-item"><span class="dot" style="background: var(--ens)"></span> Majorité présidentielle</div>
-            <div class="legend-item"><span class="dot" style="background: var(--dvc)"></span> Divers centre et dissidents Ensemble</div>
-            <div class="legend-item"><span class="dot" style="background: var(--div)"></span> Autres (divers, écologistes, régionalistes…)</div>
           </div>
 
           <div class="info-note" id="infoNote">
@@ -620,22 +642,66 @@
     </div>
 
     <div class="bottom-note">
-      Présentation en direct. Les résultats sont en cours de remontée et de consolidation. Les valeurs affichées restent actuellement à zéro, à l’exception du taux de participation à 17h déjà intégré.
+      Présentation en direct. Les résultats sont en cours de remontée et de consolidation.
     </div>
   </div>
 
   <script>
-    const parties = [
-      { code: "DVD", key: "dvd", name: "Divers droite" },
-      { code: "GAU", key: "gauche", name: "Gauche (PS, LFI, PCF, écologistes…)" },
-      { code: "RN", key: "rn", name: "Rassemblement National" },
-      { code: "ENS", key: "ens", name: "Majorité présidentielle" },
-      { code: "DVC", key: "dvc", name: "Divers centre et dissidents Ensemble" },
-      { code: "DIV", key: "div", name: "Autres (divers, écologistes, régionalistes…)" }
+    const nationalParties = [
+      {
+        code: "SE",
+        key: "div",
+        name: "Sans étiquette",
+        voix: "8 613 586 voix",
+        sieges: "384 375 sièges",
+        pct: "55,18 %",
+        pctValue: 55.18,
+        communautaires: "14 173 sièges communautaires"
+      },
+      {
+        code: "DVD",
+        key: "dvd",
+        name: "Divers droite",
+        voix: "2 068 298 voix",
+        sieges: "15 412 sièges",
+        pct: "13,25 %",
+        pctValue: 13.25,
+        communautaires: "3 398 sièges communautaires"
+      },
+      {
+        code: "DVG",
+        key: "gauche",
+        name: "Divers gauche",
+        voix: "1 402 424 voix",
+        sieges: "9 778 sièges",
+        pct: "8,98 %",
+        pctValue: 8.98,
+        communautaires: "1 933 sièges communautaires"
+      },
+      {
+        code: "DIV",
+        key: "div",
+        name: "Autres (divers, divers écologistes, régionalistes…)",
+        voix: "958 909 voix",
+        sieges: "8 637 sièges",
+        pct: "6,14 %",
+        pctValue: 6.14,
+        communautaires: "1 694 sièges communautaires"
+      },
+      {
+        code: "DVC",
+        key: "dvc",
+        name: "Divers centre et dissidents Ensemble",
+        voix: "1 089 550 voix",
+        sieges: "8 007 sièges",
+        pct: "6,98 %",
+        pctValue: 6.98,
+        communautaires: "1 390 sièges communautaires"
+      }
     ];
 
     const nationalData = {
-      title: "Résultats nationaux provisoires",
+      title: "SIÈGES MUNICIPAUX À POURVOIR : 513 425",
       mapTitle: "FRANCE — GRANDES RÉGIONS",
       mapSub: "Participation nationale estimée : 0,0 %",
       statusTitle: "Résultats en cours",
@@ -644,28 +710,83 @@
         inscrits: "0",
         votants: "0",
         participation: "0,0 %"
+      },
+      parties: nationalParties
+    };
+
+    const regionNames = [
+      "Bretagne",
+      "Normandie",
+      "Hauts-de-France",
+      "Grand Est",
+      "Pays de la Loire",
+      "Centre-Val de Loire",
+      "Île-de-France",
+      "Bourgogne-Franche-Comté",
+      "Nouvelle-Aquitaine",
+      "Occitanie",
+      "Auvergne-Rhône-Alpes",
+      "Provence-Alpes-Côte d’Azur",
+      "Corse"
+    ];
+
+    const zeroParties = [
+      {
+        code: "SE",
+        key: "div",
+        name: "Sans étiquette",
+        voix: "0 voix",
+        sieges: "0 siège",
+        pct: "0,0 %",
+        pctValue: 0,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "DVD",
+        key: "dvd",
+        name: "Divers droite",
+        voix: "0 voix",
+        sieges: "0 siège",
+        pct: "0,0 %",
+        pctValue: 0,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "DVG",
+        key: "gauche",
+        name: "Divers gauche",
+        voix: "0 voix",
+        sieges: "0 siège",
+        pct: "0,0 %",
+        pctValue: 0,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "DIV",
+        key: "div",
+        name: "Autres (divers, divers écologistes, régionalistes…)",
+        voix: "0 voix",
+        sieges: "0 siège",
+        pct: "0,0 %",
+        pctValue: 0,
+        communautaires: "0 siège communautaire"
+      },
+      {
+        code: "DVC",
+        key: "dvc",
+        name: "Divers centre et dissidents Ensemble",
+        voix: "0 voix",
+        sieges: "0 siège",
+        pct: "0,0 %",
+        pctValue: 0,
+        communautaires: "0 siège communautaire"
       }
-    };
+    ];
 
-    const regionData = {
-      "Bretagne": { title: "Résultats provisoires — Bretagne" },
-      "Normandie": { title: "Résultats provisoires — Normandie" },
-      "Hauts-de-France": { title: "Résultats provisoires — Hauts-de-France" },
-      "Grand Est": { title: "Résultats provisoires — Grand Est" },
-      "Pays de la Loire": { title: "Résultats provisoires — Pays de la Loire" },
-      "Centre-Val de Loire": { title: "Résultats provisoires — Centre-Val de Loire" },
-      "Île-de-France": { title: "Résultats provisoires — Île-de-France" },
-      "Bourgogne-Franche-Comté": { title: "Résultats provisoires — Bourgogne-Franche-Comté" },
-      "Nouvelle-Aquitaine": { title: "Résultats provisoires — Nouvelle-Aquitaine" },
-      "Occitanie": { title: "Résultats provisoires — Occitanie" },
-      "Auvergne-Rhône-Alpes": { title: "Résultats provisoires — Auvergne-Rhône-Alpes" },
-      "Provence-Alpes-Côte d’Azur": { title: "Résultats provisoires — Provence-Alpes-Côte d’Azur" },
-      "Corse": { title: "Résultats provisoires — Corse" }
-    };
-
-    Object.keys(regionData).forEach(region => {
+    const regionData = {};
+    regionNames.forEach(region => {
       regionData[region] = {
-        ...regionData[region],
+        title: `Résultats — ${region}`,
         mapTitle: region.toUpperCase(),
         mapSub: "Participation estimée : 0,0 %",
         statusTitle: "Résultats en cours",
@@ -674,7 +795,8 @@
           inscrits: "0",
           votants: "0",
           participation: "0,0 %"
-        }
+        },
+        parties: zeroParties
       };
     });
 
@@ -689,22 +811,25 @@
     const participationValue = document.getElementById("participationValue");
     const backButton = document.getElementById("backButton");
 
-    function renderResults() {
+    function renderResults(parties) {
       resultsList.innerHTML = "";
 
       parties.forEach((party) => {
         const item = document.createElement("div");
-        item.className = "result-item";
+        item.className = "result-item-detailed";
         item.innerHTML = `
           <div class="swatch ${party.key}">${party.code}</div>
-          <div class="party-block">
-            <div class="party-name">${party.name}</div>
-            <div class="party-sub">0 voix</div>
-          </div>
-          <div class="pct">0,0 %</div>
-          <div class="bar-wrap">
-            <div class="bar"><span style="width:0%"></span></div>
-            <div class="pct">0,0 %</div>
+          <div class="result-content">
+            <div class="party-name large">${party.name}</div>
+            <div class="result-meta-line">
+              <span class="meta-left">${party.voix}</span>
+              <span class="meta-right">${party.sieges}</span>
+              <span class="pct big">${party.pct}</span>
+            </div>
+            <div class="bar detailed">
+              <span style="width:${party.pctValue}%"></span>
+            </div>
+            <div class="party-sub community">${party.communautaires}</div>
           </div>
         `;
         resultsList.appendChild(item);
@@ -730,7 +855,7 @@
         region.classList.toggle("active", region.dataset.region === viewName);
       });
 
-      renderResults();
+      renderResults(data.parties);
     }
 
     document.querySelectorAll(".region").forEach(region => {
@@ -752,7 +877,6 @@
     }
 
     updateTimestamp();
-    renderResults();
     updateView("national");
   </script>
 </body>
